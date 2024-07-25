@@ -3,6 +3,8 @@ package com.ai_notes_app.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ai_notes_app.demo.exception.notes.DuplicateNoteTitleException;
@@ -66,14 +68,29 @@ public class NoteServiceImpl implements NoteService {
                                   .orElseThrow(() -> new UserNotFoundException(
                                       String.format("User with username %s not found", username)));
 
-        Optional<Note> note = noteRepository.findByIdAndUserId(id, user.getId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
 
-        if (note.isEmpty()) {
-            throw new NoteNotFoundException(
-                String.format("Note with ID %d for user %s not found", id, username));
+        if (isAdmin) {
+            // ADMIN can delete any note
+            Optional<Note> note = noteRepository.findById(id);
+            if (note.isEmpty()) {
+                throw new NoteNotFoundException(
+                    String.format("Note with ID %d not found", id));
+            }
+            noteRepository.delete(note.get());   
+        } else {
+            // Regular user can only delete their own notes
+            Optional<Note> note = noteRepository.findByIdAndUserId(id, user.getId());
+
+            if (note.isEmpty()) {
+                throw new NoteNotFoundException(
+                    String.format("Note with ID %d for user %s not found", id, username));
+            }
+    
+            noteRepository.delete(note.get());
         }
-
-        noteRepository.delete(note.get());
     }
 
     @Override
