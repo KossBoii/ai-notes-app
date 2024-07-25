@@ -1,15 +1,17 @@
 package com.ai_notes_app.demo.service;
 
-import com.ai_notes_app.demo.model.Note;
-
 import java.util.List;
+
+import com.ai_notes_app.demo.model.Note;
 
 public interface NoteService {
     Note createNote(Note note);
 
     Note updateNote(Note note);
 
-    void deleteNote(Long id);
+    void deleteNote(Long id, String username);
 
-    List<Note> getNotesByUserId(Long userId);
+    List<Note> getNotesByUsername(String username);
+
+    List<Note> getNotes();
 }
