@@ -1,3 +1,4 @@
 mysql-data
 */build/*
 .DS_Store
+*/.gradle/*
