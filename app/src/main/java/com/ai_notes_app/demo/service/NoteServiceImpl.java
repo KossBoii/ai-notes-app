@@ -86,6 +86,15 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public Note createGeneratedNote(String title, String content, Long userId) {
+        Note note = new Note();
+        note.setTitle(title);
+        note.setContent(content);
+        note.setUserId(userId);
+        return noteRepository.save(note);
+    }
+
+    @Override
     public List<Note> getNotes() {
         return noteRepository.findAll();
     }

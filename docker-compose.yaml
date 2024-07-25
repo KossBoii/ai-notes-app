@@ -28,6 +28,7 @@ services:
       - spring.datasource.username=springuser
       - spring.datasource.password=password
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+      - openai.api.key=${OPENAI_API_KEY}
     networks:
       springboot-mysql-net:
     restart: on-failure
