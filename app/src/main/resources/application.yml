@@ -6,9 +6,9 @@ spring:
         hibernate:
             ddl-auto: create
     datasource:
-        url: jdbc:mysql://${MYSQL_HOST:localhost}:3303/notes-ai
-        username: springuser
-        password: password
+        url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:localhost}/${MYSQL_DATABASE:localhost}
+        username: ${MYSQL_USER:localhost}
+        password: ${MYSQL_PASSWORD:localhost}
         driver-class-name: com.mysql.cj.jdbc.Driver
 
 app:
