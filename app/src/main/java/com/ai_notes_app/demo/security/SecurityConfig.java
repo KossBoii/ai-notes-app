@@ -26,7 +26,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)
                         .requestMatchers("/api/notes/get-all-notes").hasAuthority(ADMIN)
-                        // .requestMatchers("/api/notes", "/api/notes/**").hasAuthority(USER)
                         .requestMatchers("/api/notes", "/api/notes/create", "/api/notes/update", "/api/notes/get-notes").hasAuthority(USER)
                         .requestMatchers("/api/notes/delete/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers("/public/**", "/auth/**").permitAll()

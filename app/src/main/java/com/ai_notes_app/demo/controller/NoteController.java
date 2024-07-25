@@ -63,7 +63,7 @@ public class NoteController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/delete/{noteId}")
-    public String delete(@PathVariable Long noteId) {
+    public void delete(@PathVariable Long noteId) {
         String username = getAuthenticatedUsername();
 
         noteService.deleteNote(noteId, username);

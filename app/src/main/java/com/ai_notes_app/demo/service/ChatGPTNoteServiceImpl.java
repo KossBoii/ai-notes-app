@@ -7,13 +7,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChatGPTNoteServiceImpl implements ChatGPTNoteService {
@@ -35,7 +38,7 @@ public class ChatGPTNoteServiceImpl implements ChatGPTNoteService {
 
         // Create request body
         String requestBody = String.format(
-            "{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}], \"max_tokens\": 100}", model, prompt
+            "{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}], \"max_tokens\": 256}", model, prompt
         );
 
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
@@ -52,9 +55,16 @@ public class ChatGPTNoteServiceImpl implements ChatGPTNoteService {
                     throw new RuntimeException("Failed to parse response from ChatGPT", e);
                 }
             } else {
-                throw new RuntimeException("Failed to generate note content");
+                String errorBody = response.getBody();
+                log.error("Failed to generate note content. Response: {}", errorBody);
+                throw new RuntimeException("Failed to generate note content: " + errorBody);
             }
+        } catch (HttpStatusCodeException e) {
+            String errorBody = e.getResponseBodyAsString();
+            log.error("HTTP error occurred: {}. Response body: {}", e.getStatusCode(), errorBody);
+            throw new RuntimeException("Failed to generate note content. HTTP status: " + e.getStatusCode() + ", Response: " + errorBody, e);
         } catch (Exception e) {
+            log.error("An error occurred while generating note content", e);
             throw new RuntimeException("Failed to generate note content", e);
         }
     }

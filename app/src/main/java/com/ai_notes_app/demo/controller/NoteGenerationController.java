@@ -46,7 +46,8 @@ public class NoteGenerationController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Note created successfully with ID: " + note.getId());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to generate and save note");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                "Failed to generate and save note: " + e.getMessage());
         }
     }
 }
