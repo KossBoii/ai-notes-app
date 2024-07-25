@@ -5,15 +5,23 @@
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ## Run Application
-Before running the application, please make sure that Docker Service is currently running. Then, run the following command to start all the docker services needed for the application:
+Before running the application, please make sure that Docker Service or Docker Desktop is currently running. Next run the following command and fill in your OpenAI API key in `.env` file
+
+```bash
+cp .env.example .env
+```
+
+Then, run the following command to start all the docker services needed for the application:
 
 ```bash
 docker compose up --build --remove-orphans
 ```
 
 **Note:** Under the hood, it will build the 2 containers (1 for the app and 1 for the MySQL database). 
-- For the app, it will automatically copy all the source code and compile/build it with `gradle`. 
-- For the MySQL database, 
+
+- For the app, it will automatically copy all the source code and build it with `gradle`. 
+
+- For the MySQL database, the container already initializes the database with 2 default users for testing (admin & user). You can further check the default credentials in `app/src/main/java/com/ai_notes_app/demo/runner/DatabaseInitializer.java`. Will remove this later on to ensure the safety of DB.
 
 ## Stop Application
 
@@ -32,4 +40,31 @@ To manually test the endpoints provided using Swagger, open a browser and access
 
 - In the `Available authorizations` form that will open, provide the admin credentials (admin/admin) or user ones (user/user). Then, click `Authorize` and, finally, click `Close` button;
 
+The `note-app-api` has the following endpoints:
+#### Authentication
+| Endpoint                            | Secured | Roles           |
+| ----------------------------------- | ------- | --------------- |
+| `POST /auth/authenticate`           | No      |                 |
+| `POST /auth/signup`                 | No      |                 |
 
+#### Public Endpoints
+| Endpoint                            | Secured | Roles           |
+| ----------------------------------- | ------- | --------------- |
+| `GET /public/numberOfUsers`         | No      |                 |
+
+#### User Management
+| Endpoint                            | Secured | Roles           |
+| ----------------------------------- | ------- | --------------- |
+| `GET /api/users/me`                 | Yes     | `ADMIN`, `USER` |
+| `GET /api/users`                    | Yes     | `ADMIN`         |
+| `GET /api/users/{username}`         | Yes     | `ADMIN`         |
+| `DELETE /api/users/{username}`      | Yes     | `ADMIN`         |
+
+#### Notes
+| Endpoint                            | Secured | Roles           |
+| ----------------------------------- | ------- | --------------- |
+| `PUT /api/notes/update`             | Yes     | `USER`          |
+| `POST /api/notes/create`            | Yes     | `USER`          |
+| `GET /api/notes/get-notes`          | Yes     | `USER`          |
+| `GET /api/notes/get-all-notes`      | Yes     | `ADMIN`         |
+| `DELETE /api/notes/delete/{noteId}` | Yes     | `ADMIN`, `USER` |
