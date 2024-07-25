@@ -40,7 +40,10 @@ To manually test the endpoints provided using Swagger, open a browser and access
 
 - In the `Available authorizations` form that will open, provide the admin credentials (admin/admin) or user ones (user/user). Then, click `Authorize` and, finally, click `Close` button;
 
+## Endpoints
+
 The `note-app-api` has the following endpoints:
+
 #### Authentication
 | Endpoint                            | Secured | Roles           |
 | ----------------------------------- | ------- | --------------- |
