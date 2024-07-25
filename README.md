@@ -34,7 +34,7 @@ docker compose down -v
 
 ## Testing
 
-To manually test the endpoints provided using Swagger, open a browser and access the following address `http://localhost:8080/swagger-ui.html`. 
+To manually test the endpoints provided using Swagger, open a browser and access the following address http://localhost:8080/swagger-ui.html. 
 
 - To execute those secured endpoints with the lock sign, you need to have a valid credentials. You can either click on the black lock sign next to the endpoint or click on the green `Authorize` button at the top of the page on the right side.
 
@@ -71,3 +71,7 @@ The `note-app-api` has the following endpoints:
 | `GET /api/notes/get-notes`          | Yes     | `USER`          |
 | `GET /api/notes/get-all-notes`      | Yes     | `ADMIN`         |
 | `DELETE /api/notes/delete/{noteId}` | Yes     | `ADMIN`, `USER` |
+
+Note: 
+- These endpoints will automatically pick up the user credential (who was calling the endpoint) to execute the command.
+- For the `DELETE /api/notes/delete/{noteId}` endpoint, `ADMIN` user is allowed to delete any user's notes. However, each user can only delete the user belong to themselves. 
